@@ -1,0 +1,20 @@
+@charset "UTF-8";
+/** {
+    font-family: 'Ubuntu', sans-serif !important;
+}*/
+
+.card-img-top {
+    width: 100%;
+    object-fit: cover;
+}
+.bg-elegant-grey {
+    background-color: #333333 !important;
+}
+.shadowcard {}
+
+.blockquote {
+    color: #666;
+    margin: 0;
+    padding-left: 3em;
+    border-left: 0.5em #eee solid;
+}
