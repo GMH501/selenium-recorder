@@ -6,7 +6,7 @@ import subprocess
 from random import randint  # DEBUG
 
 from psutil import Process
-from flask import Flask, jsonify, render_template, url_for, session, redirect, request
+from flask import Flask, jsonify, render_template, url_for, session, redirect, request, send_file, abort
 
 from tester.helpers import *
 
@@ -34,14 +34,14 @@ def get_length(filename):
 
 def start():
     # return jsonify({'stopped': 'false'}), 202
-    if os.path.exists('/opt/bin/ffmpeg.pid'):
-        with open('/opt/bin/ffmpeg.pid', 'r') as f:
+    if os.path.exists('/var/run/ffmepg.pid'):
+        with open('/var/run/ffmepg.pid', 'r') as f:
             parentPid = f.read()
         parentProcess = Process(int(parentPid))
         return jsonify({'started': 'false', 'status': parentProcess.status()}), 202
     parentProcess = Popen(startCmd(), shell=False)
     parentPid = parentProcess.pid
-    with open('/opt/bin/ffmpeg.pid', 'w') as f:
+    with open('/var/run/ffmepg.pid', 'w') as f:
         f.write(str(parentPid))
     parentProcess = Process(parentPid)
     return jsonify({'started': 'true', 'status': parentProcess.status()}), 200
@@ -49,7 +49,7 @@ def start():
 
 def status():
     # return jsonify({'stopped': 'false'}), 202
-    if os.path.exists('/opt/bin/ffmpeg.pid'):
+    if os.path.exists('/var/run/ffmepg.pid'):
         return jsonify({'status': 'runnig'}), 200
     else:
         return jsonify({'status': 'not runnig'}), 202
@@ -58,14 +58,14 @@ def status():
 def stop():
     #return jsonify({'stopped': 'false'}), 200
     try:
-        with open('/opt/bin/ffmpeg.pid', 'r') as pidFile:
+        with open('/var/run/ffmepg.pid', 'r') as pidFile:
             parentPid = pidFile.read()
     except:
             return jsonify({'stopped': 'false'}), 202
     parentPid = int(parentPid)
     parentProcess = Process(parentPid)
     os.kill(parentPid, SIGTERM)
-    os.system("rm -f /opt/bin/ffmpeg.pid")
+    os.system("rm -f /var/run/ffmepg.pid")
     return jsonify({'stopped': 'true'}), 200
 
 def videos():
@@ -83,3 +83,18 @@ def videos():
     return jsonify(data)
 
 
+def download(filename):
+    path = "/opt/bin/tester/tester/static/videos/{}".format(filename)
+    if os.path.exists(path):
+        return send_file(path, as_attachment=True), 200
+    else:
+        abort(404)
+
+
+def delete(filename):
+    path = "/opt/bin/tester/tester/static/videos/{}".format(filename)
+    if os.path.exists(path):
+        os.remove(path)
+        return jsonify(success=True)
+    else:
+        abort(404)

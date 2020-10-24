@@ -32,15 +32,39 @@
 {
   font-family: 'Poppins', sans-serif;
 }
+.container {
+  display: flex; 
+  width: 100%;
+  justify-content: center;
+}
+
+button {
+  background: #99A3FF;
+  color: white;
+  border: 0;
+  padding: 3px 9px;
+  border-radius: 2px;
+}
+
+.button-container {
+  padding: 1px 2px;
+}
+
+.button-container:not(:last-child) {
+  border-right: 1.5px solid #ddd;
+}
+table.dataTable tbody th, table.dataTable tbody td {
+    padding: 2px 9px;
+}
 </style>
   </head>
 <body id="page-top">
 
     <!-- Navbar -->
-
+  <div class="mb-2">
     <nav class="navbar navbar-expand-lg fixed-top bg-dark">
       <a class="navbar-brand" href="#">
-        <img src="../static/selenium.svg" style="height: 36px;" alt="selenium">
+        <img src="../static/selenium.svg" style="height: 40px;" alt="selenium">
       </a>
       <a class="navbar-brand text-white" href="#">Selenium Test Recorder</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
@@ -52,6 +76,7 @@
         </ul>
       </div>
     </nav>
+  </div>
 
   <div id="wrapper">
 
@@ -61,9 +86,11 @@
         <!-- Area Chart Example-->
            <!--<div class="card-columns">-->
         <div class="card mt-5 mb-3">
-            <div class="card-body">
-              <div>
-                <div class="col-sm container-fluid">
+          <div class="card-body">
+            <div>
+              <div class="row">
+                <div class="col-2"></div>
+                <div class="col-6 container-fluid">
                   <button type="button" id="startButton" class="btn btn-success mb-1">REC <i id="startButtonIcon" class="fas fa-play-circle" aria-hidden="true"></i></button>
                   <button type="button" id="stopButton" class="btn btn-info mb-1">STOP <i id="stopButtonIcon" class="fas fa-stop-circle" aria-hidden="true"></i></button>
                   <video
@@ -72,7 +99,7 @@
                   controls
                   preload="auto"
                   width="640"
-                  height="306"
+                  height="340"
                   poster="/static/selenium.png"
                   data-setup="{}"
                   >
@@ -86,32 +113,32 @@
                     </p>
                   </video>
                 </div>
-                <hr>
-                <div class="table-responsive col-sm">
-                  <table class="table row-border table-bordered" id="dataTable" width="100%" cellspacing="0">
-                    <thead>
-                      <tr>
-                        <th></th>
-                        <th>Name</th>
-                        <th>Date</th>
-                        <th>Size (MB)</th>
-                        <th>Duration</th>
-                        <th></th>
-                      </tr>
-                    </thead>
-                      <tr>
-                        <th></th>
-                        <th>Name</th>
-                        <th>Date</th>
-                        <th>Size (MB)</th>
-                        <th>Duration</th>
-                        <th></th>
-                      </tr>
-                    </tfoot>
-                  </table>
-                </div>  
+                <div class="col-2"></div>
               </div>
+              <hr>
+              <div class="table-responsive col-sm">
+                <table class="table row-border table-bordered" id="dataTable" width="100%" cellspacing="0">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Date</th>
+                      <th>Size (MB)</th>
+                      <th>Duration</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Date</th>
+                      <th>Size (MB)</th>
+                      <th>Duration</th>
+                      <th></th>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>  
             </div>
+          </div>
         </div>
       <div>
       <!-- /.container-fluid -->
@@ -154,7 +181,6 @@ $(document).ready(function() {
         "ajax": "/videos",
         "order": [[ 1, "desc" ]],
         "columns": [
-        { data: null},
         { data: 'name' },
         { data: 'date' },
         { data: 'size'},
@@ -162,33 +188,41 @@ $(document).ready(function() {
         { data: null}
         ],
         "columnDefs": [
-        {
-                "data": null,
-                "defaultContent": "<button type='button' id='playButton' class='btn btn-sm'><i class='fas fa-play-circle' style='color: grey;' aria-hidden='true'></i></button>",
-                "targets": 0
-            },
             {
                 "data": null,
-                "defaultContent": "<button type='button' id='trashButton' class='btn btn-sm'><i class='fas fa-trash' style='color: grey;' id='trashButton' aria-hidden='true'></i></button><button type='button' id='playButton' class='btn btn-sm'>",
-                "targets": -1
-            }
-        ],
-        //"aoColumnDefs": [
-        //   {
-        //        "aTargets": [3],
-        //        "mData": "edit",
-        //        "mRender": function (data, type, full) {
-        //            return '<i href="https://www.w3schools.com" class="fas fa-pen" aria-hidden="true"></i>';
-        //        }
-        //    }
-        // ]
+                //"defaultContent": "<button type='button' id='trashButton' class='btn'><i class='far fa-trash-alt fa-lg' style='color: grey;' aria-hidden='true'></i></button> \
+                //                  <button type='button' id='downloadButton' class='btn'><i class='far fa-save fa-lg' style='color: grey;' aria-hidden='true'></i></button>",
+                "targets": -1,
+                "render": function ( data, type, row, meta ) {
+                  return "<div class='container'> \
+                    <div class='button-container'><button type='button' id='playButton' data-toggle='tooltip' data-placement='top' title='Play' class='btn'><i class='far fa-play-circle fa-lg'  style='color: #2E2E2E;' aria-hidden='true'></i></button></div> \
+                      <div class='button-container'><a href='/download/"+ data.name + "'><button type='button' id='downloadButton' data-toggle='tooltip' data-placement='top' title='Download' class='btn'><i class='far fa-save fa-lg' style='color: #2E2E2E;' aria-hidden='true'></i></button></a></div> \
+                        <div class='button-container'><button type='button' id='trashButton' data-toggle='tooltip' data-placement='top' title='Delete' class='btn'><i class='far fa-trash-alt fa-lg'  style='color: #2E2E2E;' aria-hidden='true'></i></button></div> \
+                          </div>"
+                }
+            },
+            {
+                "targets": 0,
+                "data": "name",
+                "render": function ( data, type, row, meta ) {
+                  return "<b>" + data + "</b>";
+                }
+            } 
+        ]
+    } );
+    $('#dataTable tbody').on('click', 'tr td button#trashButton', function () {
+      var data = table.row($(this).parents('tr')).data();
+      $.ajax({
+          type: "GET",
+          url: "/delete/" + data.name
+      });
     } );
     $('#dataTable tbody').on('click', 'tr td button#playButton', function () {
         var data = table.row($(this).parents('tr')).data();
         document.getElementById('my-video_html5_api').src= '../static/videos/' + data.name
     } );
     setInterval( function () {
-        table.ajax.reload();
+        table.ajax.reload( null, false );
     }, 3000 );
 } );
 

@@ -21,7 +21,7 @@ RUN apt-get -qqy update \
     gcc python3-dev curl wget vim python3.6 python3-pip supervisor x11-xserver-utils \
     && rm -rf /var/lib/apt/lists/* /var/cache/apt/* 
 RUN pip3 install setuptools \
-    && pip3 install psutil flask
+    && pip3 install psutil flask python-dotenv
 
 #======================================
 # Add Supervisor configuration file
