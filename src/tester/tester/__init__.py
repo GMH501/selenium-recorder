@@ -1,6 +1,6 @@
 from flask import Flask
 
-from tester.view import index, test, start, stop
+from tester.view import index, videos, start, stop, status
 
 
 def create_app(test_config=None):
@@ -8,9 +8,10 @@ def create_app(test_config=None):
     app = Flask('tester', instance_relative_config=True)
     app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
     app.add_url_rule("/", "index", index, methods=["GET"])
-    app.add_url_rule("/test", "test", test, methods=["GET"])
+    app.add_url_rule("/videos", "videos", videos, methods=["GET"])
     app.add_url_rule("/start", "start", start, methods=["GET"])
     app.add_url_rule("/stop", "stop", stop, methods=["GET"])
+    app.add_url_rule("/status", "status", status, methods=["GET"])
     
     return app
 
