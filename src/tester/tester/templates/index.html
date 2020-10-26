@@ -9,24 +9,26 @@
   <meta name="author" content="Gabriel Meghnagi">
 
   <title>Selenium Test Recorder</title>
+  
+  <link rel="shortcut icon" type="image/ico" href="../static/app/images/favicon.ico"/>
 
   <!-- Custom fonts for this template-->
   <link href="../static/Bootstrap/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
 
-  <link href="https://vjs.zencdn.net/7.8.4/video-js.css" rel="stylesheet" />
+  <link href="../static/app/video-js.css" rel="stylesheet" />
 
   <!-- If you'd like to support IE8 (for Video.js versions prior to v7) -->
-  <script src="https://vjs.zencdn.net/ie8/1.1.2/videojs-ie8.min.js"></script>
+  <script src="../static/app/videojs-ie8.min.js"></script>
 
   <!-- Custom styles for this template-->
   <link href="../static/Bootstrap/css/sb-admin.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap" rel="stylesheet">
-  <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+  <link href="../static/app/google-fonts-poppins.css" rel="stylesheet">
+  <script src="../static/app/jquery-3.3.1.js"></script>
 
-  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.18/b-1.5.6/datatables.min.css"/>
-  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
+  <link rel="stylesheet" type="text/css" href="../static/app/datatables.min.css"/>
+  <link rel="stylesheet" type="text/css" href="../static/app/font-awesome.min.css"/>
 
-  <script type="text/javascript" src="../static/Bootstrap/js/moment.js"></script>
+  <!--<script type="text/javascript" src="../static/Bootstrap/js/moment.js"></script>-->
 <style>
   body
 {
@@ -35,11 +37,11 @@
 .container {
   display: flex; 
   width: 100%;
-  justify-content: center;
+  justify-content: left;
 }
 
 button {
-  background: #99A3FF;
+  background: #3ee20c;
   color: white;
   border: 0;
   padding: 3px 9px;
@@ -61,12 +63,12 @@ table.dataTable tbody th, table.dataTable tbody td {
 <body id="page-top">
 
     <!-- Navbar -->
-  <div class="mb-2">
+  <div class="container-fluid mb-2">
     <nav class="navbar navbar-expand-lg fixed-top bg-dark">
       <a class="navbar-brand" href="#">
-        <img src="../static/selenium.svg" style="height: 40px;" alt="selenium">
+        <img src="../static/app/images/selenium.svg" style="height: 40px;" alt="selenium">
       </a>
-      <a class="navbar-brand text-white" href="#">Selenium Test Recorder</a>
+      <a class="navbar-brand text-white">Selenium Test Recorder</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -82,38 +84,43 @@ table.dataTable tbody th, table.dataTable tbody td {
 
     <div id="content-wrapper">
 
+      <!-- .container-fluid -->
       <div class="container-fluid">
-        <!-- Area Chart Example-->
-           <!--<div class="card-columns">-->
         <div class="card mt-5 mb-3">
           <div class="card-body">
             <div>
               <div class="row">
-                <div class="col-2"></div>
-                <div class="col-6 container-fluid">
-                  <button type="button" id="startButton" class="btn btn-success mb-1">REC <i id="startButtonIcon" class="fas fa-play-circle" aria-hidden="true"></i></button>
-                  <button type="button" id="stopButton" class="btn btn-info mb-1">STOP <i id="stopButtonIcon" class="fas fa-stop-circle" aria-hidden="true"></i></button>
-                  <video
-                  id="my-video"
-                  class="video-js"
-                  controls
-                  preload="auto"
-                  width="640"
-                  height="340"
-                  poster="/static/selenium.png"
-                  data-setup="{}"
-                  >
-                  <source src="../static/videos/video.mp4" type="video/mp4">
-                    <p class="vjs-no-js">
-                      To view this video please enable JavaScript, and consider upgrading to a
-                      web browser that
-                      <a href="https://videojs.com/html5-video-support/" target="_blank"
-                        >supports HTML5 video</a
+                <div class="col-lg-2"></div>
+                <div class="col-sm-12 col-lg-8 ">
+                  <div class="columns">
+                    <div  class="container container-fluid" id="buttons">
+                      <button type="button" id="startButton" class="btn mr-1 btn-success mb-1">REC <i id="startButtonIcon" class="fas fa-play-circle" aria-hidden="true"></i></button>
+                      <button type="button" id="stopButton" class="btn btn-info mb-1">STOP <i id="stopButtonIcon" class="fas fa-stop-circle" aria-hidden="true"></i></button>
+                    </div>
+                    <div class="container container-fluid">
+                      <video
+                      id="my-video"
+                      class="video-js"
+                      controls
+                      preload="auto"
+                      width="640"
+                      height="340"
+                      poster="/static/app/images/selenium.png"
+                      data-setup="{}"
                       >
-                    </p>
-                  </video>
+                      <source src="../static/videos/video.mp4" type="video/mp4">
+                        <p class="vjs-no-js">
+                          To view this video please enable JavaScript, and consider upgrading to a
+                          web browser that
+                          <a href="https://videojs.com/html5-video-support/" target="_blank"
+                            >supports HTML5 video</a
+                          >
+                        </p>
+                      </video>
+                    </div>
+                  </div>
                 </div>
-                <div class="col-2"></div>
+                <div class="col-lg-2"></div>
               </div>
               <hr>
               <div class="table-responsive col-sm">
@@ -161,18 +168,32 @@ table.dataTable tbody th, table.dataTable tbody td {
 <script>
 
 
+function refreshStatus() {
+  $.ajax({
+        type: "GET",
+        url: "/status",
+        statusCode: {
+            200: function() {
+              document.getElementById("startButton").innerHTML = 'RECORDING <i id="startButtonIcon" class="fas fa-circle-notch fa-spin" aria-hidden="true"></i>';
+              document.getElementById("startButton").classList.add("disabled");
+              document.getElementById("startButton").setAttribute("disabled", "disabled");
+              document.getElementById("stopButton").classList.remove("disabled");
+              document.getElementById("stopButton").removeAttribute("disabled", "disabled");
+            },
+            202: function(){
+              document.getElementById("startButton").classList.remove("disabled");
+              document.getElementById("startButton").removeAttribute("disabled", "disabled");
+              document.getElementById("startButton").innerHTML = 'REC <i id="startButtonIcon" class="fas fa-play-circle" aria-hidden="true"></i>';
+              document.getElementById("stopButton").setAttribute("disabled", "disabled");
+              document.getElementById("stopButton").classList.add("disabled");
+            }
+        }
+    });
+};
 
-// $('#dataTable').DataTable( {
-//     data: data,
-//     columns: [
-//         { data: 'name' },
-//         { data: 'values' }
-//     ]
-// });
-
-//var table = null
 
 $(document).ready(function() {
+    refreshStatus();
     var table = $('#dataTable').DataTable( {
         "bLengthChange": false,
         "sScrollY": "220px", // permette di scrollare in verticale la tabella
@@ -190,8 +211,6 @@ $(document).ready(function() {
         "columnDefs": [
             {
                 "data": null,
-                //"defaultContent": "<button type='button' id='trashButton' class='btn'><i class='far fa-trash-alt fa-lg' style='color: grey;' aria-hidden='true'></i></button> \
-                //                  <button type='button' id='downloadButton' class='btn'><i class='far fa-save fa-lg' style='color: grey;' aria-hidden='true'></i></button>",
                 "targets": -1,
                 "render": function ( data, type, row, meta ) {
                   return "<div class='container'> \
@@ -213,7 +232,7 @@ $(document).ready(function() {
     $('#dataTable tbody').on('click', 'tr td button#trashButton', function () {
       var data = table.row($(this).parents('tr')).data();
       $.ajax({
-          type: "GET",
+          type: "POST",
           url: "/delete/" + data.name
       });
     } );
@@ -223,9 +242,9 @@ $(document).ready(function() {
     } );
     setInterval( function () {
         table.ajax.reload( null, false );
+        refreshStatus();
     }, 3000 );
 } );
-
 
 
 //$('#dataTable tbody').on('click', 'a', function () {
@@ -251,6 +270,7 @@ $('#startButton').click(function(e) {
     });
 });
 
+
 $('#stopButton').click(function(e) {
     e.preventDefault();
     $.ajax({
@@ -268,43 +288,6 @@ $('#stopButton').click(function(e) {
     });
 });
 
-//var getData = function() {   //TOGGLIERE LA PRIMA RIGA DI COMMENTI DA QUESTO BLOCCO
-//  $.ajax({
-//    type: 'GET',
-//    url: '/test',
-//    success: function(data) {
-//      data = (data.data);
-//      table = $('#dataTable').DataTable( {
-//        data: data,
-//        columns: [
-//            { data: 'name' },
-//            { data: 'values' }
-//        ]
-//      });
-//    }
-//  });
-//};
-//
-$(document).ready(function() {
-  $.ajax({
-        type: "GET",
-        url: "/status",
-        statusCode: {
-            200: function() {
-              document.getElementById("startButton").innerHTML = 'RECORDING <i id="startButtonIcon" class="fas fa-circle-notch fa-spin" aria-hidden="true"></i>';
-              document.getElementById("startButton").classList.add("disabled");
-              document.getElementById("startButton").setAttribute("disabled", "disabled");
-              //document.getElementById("startButtonIcon").classList.remove("fa-play-circle");
-              //document.getElementById("startButtonIcon").classList.add("fa-spinner");
-              
-            },
-            202: function(){
-              document.getElementById("stopButton").setAttribute("disabled", "disabled");
-              document.getElementById("stopButton").classList.add("disabled");
-            }
-        }
-    });
-});
 
 </script>
   <!-- Bootstrap core JavaScript-->
@@ -314,9 +297,9 @@ $(document).ready(function() {
 
   <!-- Custom scripts for all pages-->
   <script src="../static/Bootstrap/js/sb-admin.min.js"></script>
-  <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+  <script src="../static/app/jquery.dataTables.min.js"></script>
   
-  <script src="https://vjs.zencdn.net/7.8.4/video.js"></script>
+  <script src="../static/app/video.js"></script>
 </body>
 
 </html>

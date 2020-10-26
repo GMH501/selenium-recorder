@@ -12,8 +12,8 @@ def create_app(test_config=None):
     app.add_url_rule("/start", "start", start, methods=["GET"])
     app.add_url_rule("/stop", "stop", stop, methods=["GET"])
     app.add_url_rule("/status", "status", status, methods=["GET"])
-    app.add_url_rule("/download/<string:filename>", "download", download, methods=["GET", "POST"])
-    app.add_url_rule("/delete/<string:filename>", "delete", delete, methods=["GET", "POST"])
+    app.add_url_rule("/download/<string:filename>", "download", download, methods=["GET"])
+    app.add_url_rule("/delete/<string:filename>", "delete", delete, methods=["POST"])
     
     return app
 
